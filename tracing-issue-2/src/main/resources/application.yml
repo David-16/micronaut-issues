@@ -1,0 +1,13 @@
+micronaut:
+  application:
+    name: micronaut-tracing-issue
+  server:
+    host: localhost
+tracing:
+  instrument-threads: true
+  jaeger:
+    enabled: true
+    sampler:
+      type: probabilistic
+      probability: 1
+
