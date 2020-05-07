@@ -42,3 +42,18 @@ It should return `aaaaaaaa`, but it does not.  It will return `zzzzzzzz` or `xxx
 
 1. Remove `@Cacheable`
 2. Remove reactive types (there are `/non-reactive` endpoints that are exactly the same except do not use `io.reactivex` types and these do not have issues)
+
+## Hints
+
+I debugged the issue best I could, but I am no expert with reactive types and the subscriber / publisher hell is too much for me at this time
+
+I did, however, notice the following line in `io.opentracing.util.ThreadLocalScope` was hitting in the breakpoint:
+
+```
+if (scopeManager.tlsScope.get() != this) {
+    // This shouldn't happen if users call methods in the expected order. Bail out.
+    return;
+}
+```
+
+Note the comment.  The fact that the breakpoint stops at this line suggests there is an unequal number of push and pops of the OpenTracing context
